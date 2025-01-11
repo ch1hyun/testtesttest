@@ -1,63 +1,54 @@
 name: 'PR Discord Notification'
-description: 'Sends PR notifications to Discord.'
-branding:
-  icon: 'award'
-  color: 'blue'
 
 on:
-  pull_request_target:
-    types: [opened, reopened]
-
-inputs:
-  discord_webhook_url:
-    description: 'webhook URL of a Discord channel.'
-    required: true
-    default: ${{ secrets.DISCORD_WEBHOOK_URL }}
   pull_request:
-    description: 'Pull request json.'
-    required: false
-    default: ${{ toJson(github.event.pull_request) }}
-
-runs:
-  using: 'composite'
-  steps:
-    - shell: bash
-      env:
-        BODY: ${{ toJson(fromJson(inputs.pull_request).body) }}
-        USERNAME: ${{ toJson(fromJson(inputs.pull_request).user.login) }}
-        AVATAR_URL: ${{ toJson(fromJson(inputs.pull_request).user.avatar_url) }}
-        TITLE: ${{ toJson(fromJson(inputs.pull_request).title) }}
-        URL: ${{ toJson(fromJson(inputs.pull_request).html_url) }}
-    - run: >
-        PROBLEM=$(
-          echo $BODY |
-          grep -Pio 'http[\w\:\/\.\-\?\=\&]+' |
-          head -1 ||
-          echo "$URL" |
-          tr -d '"'
-        );
-        echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV;
-        echo "USERNAME=$USERNAME" >> $GITHUB_ENV;
-        echo "AVATAR_URL=$AVATAR_URL" >> $GITHUB_ENV;
-        echo "TITLE=$TITLE" >> $GITHUB_ENV;
-        echo "URL=$URL" >> $GITHUB_ENV;
-    - shell: bash
-      env:
-        data: >
-          {
-            "username": ${{ env.USERNAME }},
-            "avatar_url": ${{ env.AVATAR_URL }},
-            "embeds": [
-              {
-                "title": ${{ env.TITLE }},
-                "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n${{ env.PROBLEM }}",
-                "url": ${{ env.URL }},
-                "color": 6847432
-              }
-            ]
-          }
-      run: >
-        curl -X
-        POST -H 'Content-type:application/json'
-        -d "$DATA"
-        ${{ inputs.discord_webhook_url }}
+    types: 
+      - opened
+      - reopend
+      - closed
+    
+jobs:
+  notification:
+    runs-on: ubuntu-24.04
+    
+    steps:
+      - shell: bash
+        env:
+          BODY: ${{ toJson(fromJson(inputs.pull_request).body) }}
+          USERNAME: ${{ toJson(fromJson(inputs.pull_request).user.login) }}
+          AVATAR_URL: ${{ toJson(fromJson(inputs.pull_request).user.avatar_url) }}
+          TITLE: ${{ toJson(fromJson(inputs.pull_request).title) }}
+          URL: ${{ toJson(fromJson(inputs.pull_request).html_url) }}
+      - run: >
+          PROBLEM=$(
+            echo $BODY |
+            grep -Pio 'http[\w\:\/\.\-\?\=\&]+' |
+            head -1 ||
+            echo "$URL" |
+            tr -d '"'
+          );
+          echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV;
+          echo "USERNAME=$USERNAME" >> $GITHUB_ENV;
+          echo "AVATAR_URL=$AVATAR_URL" >> $GITHUB_ENV;
+          echo "TITLE=$TITLE" >> $GITHUB_ENV;
+          echo "URL=$URL" >> $GITHUB_ENV;
+      - shell: bash
+        env:
+          data: >
+            {
+              "username": ${{ env.USERNAME }},
+              "avatar_url": ${{ env.AVATAR_URL }},
+              "embeds": [
+                {
+                  "title": ${{ env.TITLE }},
+                  "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n${{ env.PROBLEM }}",
+                  "url": ${{ env.URL }},
+                  "color": 6847432
+                }
+              ]
+            }
+        run: >
+          curl -X
+          POST -H 'Content-type:application/json'
+          -d "$data"
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
