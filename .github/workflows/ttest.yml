@@ -4,6 +4,10 @@ branding:
   icon: 'award'
   color: 'blue'
 
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
 inputs:
   discord_webhook_url:
     description: 'webhook URL of a Discord channel.'
