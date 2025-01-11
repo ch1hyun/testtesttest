@@ -12,14 +12,15 @@ jobs:
     runs-on: ubuntu-24.04
     
     steps:
-      - shell: bash
+      - name: Initialize
+        shell: bash
         env:
           BODY: ${{ toJson(fromJson(inputs.pull_request).body) }}
           USERNAME: ${{ toJson(fromJson(inputs.pull_request).user.login) }}
           AVATAR_URL: ${{ toJson(fromJson(inputs.pull_request).user.avatar_url) }}
           TITLE: ${{ toJson(fromJson(inputs.pull_request).title) }}
           URL: ${{ toJson(fromJson(inputs.pull_request).html_url) }}
-      - run: >
+        run: |
           PROBLEM=$(
             echo $BODY |
             grep -Pio 'http[\w\:\/\.\-\?\=\&]+' |
@@ -32,7 +33,8 @@ jobs:
           echo "AVATAR_URL=$AVATAR_URL" >> $GITHUB_ENV;
           echo "TITLE=$TITLE" >> $GITHUB_ENV;
           echo "URL=$URL" >> $GITHUB_ENV;
-      - shell: bash
+      - name: Discord Notification
+        shell: bash
         env:
           data: >
             {
@@ -47,7 +49,7 @@ jobs:
                 }
               ]
             }
-        run: >
+        run: |
           curl -X
           POST -H 'Content-type:application/json'
           -d "$data"
