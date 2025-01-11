@@ -48,7 +48,6 @@ jobs:
               ]
             }
         run: |
-          curl -X
-          POST -H 'Content-type:application/json'
-          -d "$data"
+          curl -X POST -H 'Content-type:application/json'\
+          -d "$data"\
           ${{ secrets.DISCORD_WEBHOOK_URL }}
