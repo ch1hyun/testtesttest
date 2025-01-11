@@ -32,15 +32,15 @@ jobs:
           echo "AVATAR_URL=$AVATAR_URL" >> $GITHUB_ENV;
           echo "TITLE=$TITLE" >> $GITHUB_ENV;
           echo "URL=$URL" >> $GITHUB_ENV;
-          curl -X POST -H 'Content-type:application/json'\
+          curl -X POST -H 'Content-type:application/json' -g \
           -d '{
-              "username": "'"${{ env.USERNAME }}"'",
-              "avatar_url": "'"${{ env.AVATAR_URL }}"'",
+              "username": "${{ env.USERNAME }}",
+              "avatar_url": "${{ env.AVATAR_URL }}",
               "embeds": [
                 {
-                  "title": "'"${{ env.TITLE }}"'",
-                  "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n'"${{ env.PROBLEM }}"'",
-                  "url": "'"${{ env.URL }}"'",
+                  "title": "${{ env.TITLE }}",
+                  "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n${{ env.PROBLEM }}",
+                  "url": "${{ env.URL }}",
                   "color": 6847432
                 }
               ]
