@@ -39,7 +39,7 @@ jobs:
               "embeds": [
                 {
                   "title": "'"${{ env.TITLE }}"'",
-                  "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n$'"{{ env.PROBLEM }}"'",
+                  "description": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵\n\n'"${{ env.PROBLEM }}"'",
                   "url": "'"${{ env.URL }}"'",
                   "color": 6847432
                 }
