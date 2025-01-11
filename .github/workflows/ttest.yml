@@ -20,11 +20,11 @@ jobs:
           TITLE: ${{ github.event.pull_request.title }}
           URL: ${{ github.event.pull_request.html_url }}
         run: |
-          export PROBLEM=$(
-            echo $env.BODY |
+          PROBLEM=$(
+            echo "$BODY" |
             grep -Pio 'http[\w\:\/\.\-\?\=\&]+' |
             head -1 ||
-            echo "$env.URL" |
+            echo "$URL" |
             tr -d '"'
           );
           curl -X POST -H 'Content-type:application/json' -g \
