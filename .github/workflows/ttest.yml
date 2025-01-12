@@ -14,29 +14,18 @@ jobs:
     steps:
       - name: Discord Notification
         env:
-          BODY: ${{ github.event.pull_request.body }}
+          ACTION: ${{ github.event.action }}
           USERNAME: ${{ github.event.pull_request.user.login }}
-          AVATAR_URL: ${{ github.event.pull_request.user.avatar_url }}
           TITLE: ${{ github.event.pull_request.title }}
           URL: ${{ github.event.pull_request.html_url }}
         run: |
-          PROBLEM=$(
-            echo "$BODY" |
-            grep -Pio 'http[\w\:\/\.\-\?\=\&]+' |
-            head -1 ||
-            echo "$URL" |
-            tr -d '"'
-          );
           curl -X POST -H "Content-Type: application/json" \
           -d '{
-              "username": "'"$USERNAME"'",
-              "avatar_url": "'"$AVATAR_URL"'",
               "embeds": [
                 {
-                  "title": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵",
-                  "description": "'"$PROBLEM"'",
-                  "url": "'"$URL"'",
-                  "color": 2491372
+                  "title": "😵 이 세계 벽 절대 안높아 😵",
+                  "description": "**🔥 부딪히는거야 🔥**\n👤 '"$USERNAME"'\n🔊 '"$TITLE"'\n🔗 '"$URL"'",
+                  "color": "#B5F602"
                 }
               ]
             }' ${{ secrets.DISCORD_WEBHOOK_URL }};
