@@ -27,15 +27,15 @@ jobs:
             echo "$URL" |
             tr -d '"'
           );
-          curl -X POST -H 'Content-type:application/json' -g \
+          curl -X POST -H "Content-Type: application/json" \
           -d '{
-              "username": "$USERNAME",
-              "avatar_url": "$AVATAR_URL",
+              "username": "'"$USERNAME"'",
+              "avatar_url": "'"$AVATAR_URL"'",
               "embeds": [
                 {
                   "title": "😵 이 세계 벽 절대 안높아 부딪히는거야 😵",
-                  "description": "$PROBLEM",
-                  "url": "$URL",
+                  "description": "'"$PROBLEM"'",
+                  "url": "'"$URL"'",
                   "color": 2491372
                 }
               ]
