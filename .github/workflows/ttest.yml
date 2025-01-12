@@ -4,7 +4,6 @@ on:
   pull_request:
     types: 
       - opened
-      - reopend
       - closed
     
 jobs:
@@ -15,16 +14,27 @@ jobs:
       - name: Discord Notification
         env:
           ACTION: ${{ github.event.action }}
+          MERGED: ${{ github.event.pull_request.merged }}
           USERNAME: ${{ github.event.pull_request.user.login }}
           TITLE: ${{ github.event.pull_request.title }}
           URL: ${{ github.event.pull_request.html_url }}
         run: |
+          DESCRIPTION_MESSAGE="temp"
+
+          if [[ "$ACTION" == "opened" ]]; then
+            DESCRIPTION_MESSAGE="오이오이 리뷰하라구"
+          elif [[ "$ACTION" == "closed" && "$MERGED" == "true" ]]; then
+            DESCRIPTION_MESSAGE="💯💯💯"
+          else
+            DESCRIPTION_MESSAGE="기행종이었다니,,"
+          fi
+          
           curl -X POST -H "Content-Type: application/json" \
           -d '{
               "embeds": [
                 {
-                  "title": "😵 이 세계 벽 절대 안높아 😵",
-                  "description": "**🔥 부딪히는거야 🔥**\n👤 '"$USERNAME"'\n🔊 '"$TITLE"'\n🔗 '"$URL"'",
+                  "title": "😵 신죠오 사사게오 😵",
+                  "description": "**🔥 '"$DESCRIPTION_MESSAGE"' 🔥**\n👤 '"$USERNAME"'\n🔊 '"$TITLE"'\n🔗 '"$URL"'",
                   "color": 6847432
                 }
               ]
