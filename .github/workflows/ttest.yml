@@ -25,7 +25,7 @@ jobs:
                 {
                   "title": "😵 이 세계 벽 절대 안높아 😵",
                   "description": "**🔥 부딪히는거야 🔥**\n👤 '"$USERNAME"'\n🔊 '"$TITLE"'\n🔗 '"$URL"'",
-                  "color": "#B5F602"
+                  "color": 6847432
                 }
               ]
             }' ${{ secrets.DISCORD_WEBHOOK_URL }};
